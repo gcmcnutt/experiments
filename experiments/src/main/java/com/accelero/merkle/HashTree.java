@@ -1,7 +1,6 @@
 package com.accelero.merkle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Formatter;
 import java.util.List;
 
@@ -10,8 +9,8 @@ import org.apache.log4j.Logger;
 public class HashTree {
     private static final Logger LOGGER = Logger.getLogger(HashTree.class);
 
-    private Node root;
-    private int nodes;
+    private Node                root;
+    private int                 nodes;
 
     // preallocate the hashtree
     public HashTree(int nodes) {
@@ -58,11 +57,11 @@ public class HashTree {
 
     private static void compareTrees(List<Integer> diffs, Node us, Node them) {
         if (us.getLeaf() != null) {
-            if (!Arrays.equals(us.getHash(), them.getHash())) {
+            if (!us.getHash().equals(them.getHash())) {
                 diffs.add(us.getLeaf().getIndex());
             }
         } else {
-            if (!Arrays.equals(us.getHash(), them.getHash())) {
+            if (!us.getHash().equals(them.getHash())) {
                 compareTrees(diffs, us.getLeft(), them.getLeft());
                 compareTrees(diffs, us.getRight(), them.getRight());
             }
@@ -85,7 +84,7 @@ public class HashTree {
         } else if (node.getLeaf() != null) {
             f.format("leaf[%s]\n", node);
         } else {
-            f.format("left[%b] right[%b] hash[%s]\n", node.getLeft() != null, node.getRight() != null, Util.byteArray2Hex(node.getHash()));
+            f.format("left[%b] right[%b] hash[%s]\n", node.getLeft() != null, node.getRight() != null, node.getHash());
             dump(f, node.getLeft(), depth + 1);
             dump(f, node.getRight(), depth + 1);
         }

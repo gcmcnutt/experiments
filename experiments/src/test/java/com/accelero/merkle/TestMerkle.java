@@ -64,10 +64,10 @@ public class TestMerkle extends Assert {
         List<Integer> diff = in.getDifferences(out);
         LOGGER.debug(String.format("Expect[%s]", exceptions));
         LOGGER.debug(String.format("Found [%s]", diff));
-
+        assertEquals(exceptions, diff);
     }
 
-    @Test(threadPoolSize = 2, invocationCount = 1000)
+    @Test(threadPoolSize = 2, invocationCount = 20)
     public void testMoreRandom() {
         Random r = new Random();
         List<Integer> exceptions = new ArrayList<Integer>();
@@ -121,6 +121,5 @@ public class TestMerkle extends Assert {
         assertEquals(exceptions, diff);
         LOGGER.info("Compare is ok");
     }
-
 
 }

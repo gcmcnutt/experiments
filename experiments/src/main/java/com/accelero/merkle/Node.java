@@ -9,8 +9,8 @@ public class Node {
 
     private Node left;
     private Node right;
-    private byte[] hash;
-    private Leaf leaf;
+    private volatile Hash hash;
+    private volatile Leaf leaf;
 
     // pre-allocates nodes based on the count
     public Node(int count) {
@@ -18,7 +18,7 @@ public class Node {
             // initial hash isn't too interesting
             this.hash = Util.generateHash(new byte[0]);
             if (LOGGER.isTraceEnabled()) {
-                LOGGER.trace(String.format("Set end hash: hash[%s]", Util.byteArray2Hex(hash)));
+                LOGGER.trace(String.format("Set end hash: hash[%s]", hash));
             }
             return;
         }
@@ -40,7 +40,7 @@ public class Node {
         return right;
     }
 
-    public byte[] getHash() {
+    public Hash getHash() {
         return hash;
     }
 
@@ -66,7 +66,7 @@ public class Node {
     @Override
     public String toString() {
         Formatter f = new Formatter();
-        f.format("Hash[%s] Leaf[%s]", Util.byteArray2Hex(hash), leaf);
+        f.format("Hash[%s] Leaf[%s]", hash, leaf);
         return f.toString();
     }
 }
