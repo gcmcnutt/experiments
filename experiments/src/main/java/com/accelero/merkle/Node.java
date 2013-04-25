@@ -1,16 +1,18 @@
 package com.accelero.merkle;
 
 import java.util.Formatter;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 
 public class Node {
     private static final Logger LOGGER = Logger.getLogger(Leaf.class);
 
-    private Node left;
-    private Node right;
-    private volatile Hash hash;
-    private volatile Leaf leaf;
+    private Node                left;
+    private Node                right;
+    private volatile Hash       hash;
+    private volatile Leaf       leaf;
+    private AtomicBoolean       intent = new AtomicBoolean();
 
     // pre-allocates nodes based on the count
     public Node(int count) {
