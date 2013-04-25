@@ -3,6 +3,7 @@ package com.accelero.merkle;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
+import java.util.Stack;
 
 import org.apache.log4j.Logger;
 
@@ -22,28 +23,29 @@ public class HashTree {
         // get a leaf, figure out its hash and merge it in
         Leaf newLeaf = new Leaf(index, data);
 
-        // ok, we got a leaf, figure out where to put it in the tree
-        resetLeafNode(root, nodes, index, newLeaf);
-    }
-
-    private void resetLeafNode(Node node, int size, int relativeIndex, Leaf newLeaf) {
-        // are we the node?
-        if (size <= 1) {
-            // yes.  and this'll set the hash at our node level too
-            node.setLeaf(newLeaf);
-            return;
+        // binary search for our node - keep track of the path
+        Stack<Node> stack = new Stack<Node>();
+        int size = nodes;
+        Node walker = root;
+        while (size > 1) {
+            stack.push(walker);
+            int half = size / 2;
+            if (index < half) {
+                walker = walker.getLeft();
+                size = half;
+            } else {
+                walker = walker.getRight();
+                size -= half;
+                index -= half;
+            }
         }
 
-        // binary search for our leaf
-        int half = size / 2;
-        if (relativeIndex < half) {
-            resetLeafNode(node.getLeft(), half, relativeIndex, newLeaf);
-        } else {
-            resetLeafNode(node.getRight(), size - half, relativeIndex - half, newLeaf);
-        }
+        // found the node, update it and walk our way back and update the hash
+        walker.setLeaf(newLeaf);
 
-        // since we're not a leaf node, recompute our hash from our kids
-        node.updateHash();
+        while (!stack.isEmpty()) {
+            stack.pop().updateHash();
+        }
     }
 
     public List<Integer> getDifferences(HashTree other) {
